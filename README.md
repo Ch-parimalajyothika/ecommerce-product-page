@@ -38,7 +38,8 @@ To build a functional and dynamic product page while learning how to create inte
 
 ## 📷 Screenshot
 
-![E-commerce Product Page Preview](product-page.png.png)
+![E-commerce Product Page Preview](screenshots/product-page.png.png)
+
 
 ---
 
