@@ -65,6 +65,30 @@ const products = [
     category: "home",
     img: "Bottle.avif"
   }
+  {
+    name: "iphone 11",
+    price: 43900 ,
+    category: "electronics",
+    img: "phone1.avif"
+  },
+  {
+    name: "Infinix Zero 5G 2023",
+    price: 8999,
+    category: "electronics",
+    img: "phones.avif"
+  },
+  {
+    name: "Floral Frock",
+    price: 799,
+    category: "fashion",
+    img: "frock1.avif"
+  },
+   {
+    name: "Fancy  Frock",
+    price: 699,
+    category: "fashion",
+    img: "frock.webp"
+  },
 ];
 
 function renderProducts(productList = products) {
