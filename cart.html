@@ -2,42 +2,64 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Your Cart - EcoVibe</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Cart - VibeMart</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
 </head>
-<body class="bg-white text-gray-800 p-4">
+<body class="bg-gray-50 text-gray-800 p-6">
 
-  <h1 class="text-3xl font-bold mb-6">Your Cart</h1>
-  
+  <h1 class="text-3xl font-bold mb-6">🛒 Your Cart</h1>
+
   <div id="cartItems" class="space-y-4"></div>
-  
-  <p id="emptyMsg" class="text-gray-500"></p>
-  
-  <button onclick="clearCart()" class="mt-6 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
-    Clear Cart
-  </button>
+
+  <p id="emptyMsg" class="text-gray-500 mt-4"></p>
+  <p id="totalPrice" class="text-xl font-semibold mt-4"></p>
+
+  <div id="cartActions" class="mt-6 hidden">
+    <div class="flex gap-4 flex-wrap">
+      <button onclick="placeOrder()" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">
+        ✅ Place Order
+      </button>
+      <button onclick="clearCart()" class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600">
+        ❌ Clear Cart
+      </button>
+      <a href="orders.html" class="px-4 py-2 bg-pink-600 text-white rounded hover:bg-pink-700">
+        🗒 My Orders
+      </a>
+    </div>
+  </div>
 
   <script>
     function loadCart() {
       const cart = JSON.parse(localStorage.getItem("cart")) || [];
       const container = document.getElementById("cartItems");
       const emptyMsg = document.getElementById("emptyMsg");
-      
+      const totalPriceEl = document.getElementById("totalPrice");
+      const actions = document.getElementById("cartActions");
+
       container.innerHTML = "";
+
       if (cart.length === 0) {
         emptyMsg.textContent = "Your cart is empty.";
+        totalPriceEl.textContent = "";
+        actions.classList.add("hidden");
         return;
       }
+
       emptyMsg.textContent = "";
+      actions.classList.remove("hidden");
+
+      let total = 0;
 
       cart.forEach((item, index) => {
+        total += parseFloat(item.price);
+
         const div = document.createElement("div");
-        div.className = "border p-4 rounded shadow-sm flex justify-between items-center";
+        div.className = "border p-4 rounded shadow-sm flex justify-between items-center bg-white";
 
         div.innerHTML = `
           <div class="flex items-center gap-4">
-            <img src="${item.img || 'https://via.placeholder.com/80x80?text=No+Image'}" alt="${item.name}" class="w-20 h-20 object-cover rounded" />
+            <img src="${item.img}" alt="${item.name}" class="w-20 h-20 object-cover rounded" />
             <span class="font-semibold">${item.name}</span>
           </div>
           <div class="flex items-center gap-4">
@@ -47,6 +69,8 @@
         `;
         container.appendChild(div);
       });
+
+      totalPriceEl.textContent = `Total: ₹${total.toFixed(2)}`;
     }
 
     function removeItem(index) {
@@ -54,16 +78,53 @@
       cart.splice(index, 1);
       localStorage.setItem("cart", JSON.stringify(cart));
       loadCart();
+      updateCartCount();
     }
 
     function clearCart() {
-      if(confirm("Are you sure you want to clear the cart?")) {
+      if (confirm("Are you sure you want to clear the cart?")) {
         localStorage.removeItem("cart");
         loadCart();
+        updateCartCount();
       }
     }
 
-    window.onload = loadCart;
+    function placeOrder() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      if (cart.length === 0) {
+        alert("Your cart is empty.");
+        return;
+      }
+
+      if (confirm("Are you sure you want to place the order?")) {
+        // Save booking before clearing
+        const orders = JSON.parse(localStorage.getItem("orders")) || [];
+        const newOrder = {
+          orderId: Math.floor(Math.random() * 1000000),
+          date: new Date().toLocaleDateString(),
+          items: cart
+        };
+        orders.push(newOrder);
+        localStorage.setItem("orders", JSON.stringify(orders));
+
+        localStorage.removeItem("cart");
+        updateCartCount();
+        window.location.href = "thankyou.html";
+      }
+    }
+
+    function updateCartCount() {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      const countEl = document.getElementById("cartCount");
+      if (countEl) {
+        countEl.textContent = cart.length;
+      }
+    }
+
+    window.onload = () => {
+      loadCart();
+      updateCartCount();
+    };
   </script>
 
 </body>
