@@ -84,10 +84,10 @@ const products = [
     img: "frock1.avif"
   },
    {
-    name: "Fancy  Frock",
+    name: " Kids Blue Frock",
     price: 699,
     category: "fashion",
-    img: "frock.webp"
+    img: "kids frock.avif"
   },
 ];
 
