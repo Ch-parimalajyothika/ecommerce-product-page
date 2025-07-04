@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>My Orders - VibeMart</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #ecfdf5;
+      padding: 20px;
+      margin: 0;
+    }
+
+    header {
+      background-color: #10b981;
+      color: white;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 4px solid #059669;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: 1.8rem;
+    }
+
+    .back-button {
+      background: white;
+      color: #10b981;
+      border: 2px solid #10b981;
+      padding: 8px 16px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: 0.3s;
+    }
+
+    .back-button:hover {
+      background-color: #d1fae5;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 2rem auto;
+    }
+
+    .order {
+      border: 1px solid #ccc;
+      padding: 16px;
+      margin-bottom: 20px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .order h2 {
+      color: #065f46;
+      margin-bottom: 0.5rem;
+    }
+
+    .item {
+      padding: 5px 0;
+      border-bottom: 1px dashed #ccc;
+      font-size: 1rem;
+    }
+
+    .cancel-btn {
+      margin-top: 10px;
+      background-color: #ef4444;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+
+    .cancel-btn:hover {
+      background-color: #dc2626;
+    }
+
+    .no-bookings {
+      text-align: center;
+      font-size: 1.1rem;
+      color: #6b7280;
+      margin-top: 3rem;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>📦 My Orders</h1>
+    <a href="index.html" class="back-button">← Back to Home</a>
+  </header>
+
+  <div class="container" id="ordersContainer"></div>
+
+  <script>
+    let orders = JSON.parse(localStorage.getItem("orders")) || [];
+    const container = document.getElementById("ordersContainer");
+
+    function renderOrders() {
+      container.innerHTML = "";
+
+      if (orders.length === 0) {
+        container.innerHTML = "<p class='no-bookings'>You have no orders yet.</p>";
+        return;
+      }
+
+      orders.forEach((order, index) => {
+        const div = document.createElement("div");
+        div.className = "order";
+        div.innerHTML = `
+          <h2>Order ID: ${order.orderId}</h2>
+          <p><strong>Date:</strong> ${order.date}</p>
+          <p><strong>Items:</strong></p>
+          ${order.items.map(item => `
+            <div class="item">${item.name} – ₹${item.price}</div>
+          `).join("")}
+          <button class="cancel-btn" onclick="cancelOrder(${index})">❌ Cancel Order</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function cancelOrder(index) {
+      if (confirm("Are you sure you want to cancel this order?")) {
+        orders.splice(index, 1);
+        localStorage.setItem("orders", JSON.stringify(orders));
+        renderOrders();
+      }
+    }
+
+    renderOrders();
+  </script>
+
+</body>
+</html>

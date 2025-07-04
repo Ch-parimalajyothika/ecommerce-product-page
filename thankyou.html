@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Thank You - VibeMart</title>
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, #d1fae5, #f0fdf4);
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .container {
+      text-align: center;
+      background-color: white;
+      padding: 2.5rem 3rem;
+      border-radius: 1rem;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      max-width: 600px;
+      width: 90%;
+      z-index: 10;
+    }
+
+    h1 {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #047857;
+      margin-bottom: 1rem;
+    }
+
+    p {
+      font-size: 1.1rem;
+      color: #065f46;
+      margin-bottom: 2rem;
+    }
+
+    .buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      text-decoration: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: 0.5rem;
+      font-weight: 500;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+
+    .green {
+      background-color: #10b981;
+    }
+
+    .green:hover {
+      background-color: #059669;
+    }
+
+    .pink {
+      background-color: #ec4899;
+      border: none;
+      cursor: pointer;
+    }
+
+    .pink:hover {
+      background-color: #db2777;
+    }
+
+    audio {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🎉 Thank You for Your Order!</h1>
+    <p>Your products will be delivered to you shortly.</p>
+
+    <div class="buttons">
+      <a href="index.html" class="btn green">🏠 Back to Home</a>
+      <a href="orders.html" class="btn green">🗒 View My Ordres</a>
+      <button onclick="downloadInvoice()" class="btn pink">📄 Download Invoice</button>
+    </div>
+
+    <audio id="successSound" autoplay>
+      <source src="order-confirmed.mp3" type="audio/mpeg" />
+    </audio>
+  </div>
+
+  <script>
+    // Confetti animation behind content
+    const duration = 3000;
+    const end = Date.now() + duration;
+    (function confettiBurst() {
+      confetti({
+        particleCount: 10,
+        angle: 60 + Math.random() * 60,
+        spread: 70,
+        origin: { y: 0.6 },
+        zIndex: 0 // This keeps confetti behind the white container
+      });
+      if (Date.now() < end) requestAnimationFrame(confettiBurst);
+    })();
+
+    // Invoice download
+    function downloadInvoice() {
+      const invoiceText = `
+Thank you for shopping with VibeMart!
+-------------------------------------
+Invoice ID: INV-${Math.floor(Math.random() * 1000000)}
+Date: ${new Date().toLocaleDateString()}
+Total Paid: ₹36,500
+-------------------------------------
+Visit us again!
+      `;
+      const blob = new Blob([invoiceText], { type: "text/plain" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "VibeMart_Invoice.txt";
+      link.click();
+    }
+
+    // Ensure sound plays
+    window.addEventListener("load", () => {
+      const sound = document.getElementById("successSound");
+      sound.play().catch(() => {
+        console.warn("Autoplay blocked.");
+      });
+    });
+  </script>
+</body>
+</html>
