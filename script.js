@@ -64,7 +64,7 @@ const products = [
     price: 149,
     category: "home",
     img: "Bottle.avif"
-  }
+  },
   {
     name: "iphone 11",
     price: 43900 ,
